@@ -11,6 +11,9 @@ public:
 int main()
 {
   // construct an Internet or user datagram here, and send using the RawSocket as in the Jan. 10 lecture
-
+  RawSocket sock;
+  string datagram;
+  datagram += "Hello from CS144!!";
+  sock.sendto ( Address{" 1 "}, datagram );
   return 0;
 }

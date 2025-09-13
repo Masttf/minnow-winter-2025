@@ -287,11 +287,7 @@ The goal of this behavior is to limit the amount of memory used by the `Reassemb
 
 ---
 
-**(Image description)**
-A diagram showing a stream of bytes starting from index 0. There's a section labeled "bytes that have been popped already" (blue), followed by "bytes buffered in the ByteStream" (green), and then "bytes (substrings) in the Reassembler's internal storage" (red). A bracket above green and red parts indicates "width: capacity". Another bracket below shows "width: available capacity". The diagram indicates "first unpopped index", "first unassembled index", and "first unacceptable index".
-
-**(图片描述)**
-一张图表展示了一个从索引 0 开始的字节流。其中有一段标记为“已经被弹出的字节”（蓝色），接着是“在 ByteStream 中缓冲的字节”（绿色），然后是“在 Reassembler 内部存储中的字节（子字符串）”（红色）。绿色和红色部分上方有一个括号，标明“宽度：容量”。下方另一个括号显示“宽度：可用容量”。图表指出了“第一个未弹出的索引”、“第一个未组装的索引”和“第一个不可接受的索引”。
+![image-20250912211045057](./assets/image-20250912211024196.png)
 
 ---
 
