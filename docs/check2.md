@@ -183,27 +183,12 @@ To make these distinctions concrete, consider the byte stream containing just th
 
 ---
 
-**English:**
-The figure shows the three different types of indexing involved in TCP:
-**Sequence Numbers**
-* Start at the ISN
-* Include SYN/FIN
-* 32 bits, wrapping
-* "seqno"
-**Absolute Sequence Numbers**
-* Start at 0
-* Include SYN/FIN
-* 64 bits, non-wrapping
-* "absolute seqno"
-**Stream Indices**
-* Start at 0
-* Omit SYN/FIN
-* 64 bits, non-wrapping
-* "stream index"
+![image-20250913184557150](./assets/image-20250913184557150.png)
 
 **中文:**
 该图显示了 TCP 中涉及的三种不同类型的索引：
 **序列号 (Sequence Numbers)**
+
 *   从 ISN 开始
 *   包括 SYN/FIN
 *   32 位，会回绕
@@ -235,6 +220,7 @@ We've defined the type for you and provided some helper functions, but you'll im
 **中文:**
 在绝对序列号和流索引之间转换相当容易——只需加一或减一。不幸的是，在序列号和绝对序列号之间转换要困难一些，并且混淆两者会产生棘手的错误。为了系统地防止这些错误，我们将用一个自定义类型来表示序列号：`Wrap32`，并编写它与绝对序列号（用 `uint64_t` 表示）之间的转换。`Wrap32` 是一个包装器类型（wrapper type）的例子：一个包含内部类型（在这种情况下是 `uint32_t`）但提供一组不同函数/运算符的类型。
 我们已经为你定义了该类型并提供了一些辅助函数，但你需要在 `wrapping_integers.cc` 中实现转换：
+
 1.  `static Wrap32 Wrap32::wrap( uint64_t n, Wrap32 zero_point )`
     将**绝对序列号 → 序列号**。给定一个绝对序列号 (n) 和一个初始序列号 (zero\_point)，生成 n 的（相对）序列号。
 2.  `uint64_t unwrap( Wrap32 zero_point, uint64_t checkpoint ) const`
@@ -270,7 +256,7 @@ First, let's review the format of a TCP “sender message," which contains the i
 
 ---
 
-**English:**
+**中文:**
 ```cpp
 /*
  * The TCPSenderMessage structure contains five fields (minnow/util/tcp_sender_message.hh):
@@ -289,23 +275,6 @@ First, let's review the format of a TCP “sender message," which contains the i
  * 5) The RST (reset) flag. If set, the stream has suffered an error and the connection
  *    should be aborted.
  */
-struct TCPSenderMessage
-{
-    Wrap32 seqno { 0 };
-
-    bool SYN {};
-    std::string payload {};
-    bool FIN {};
-
-    bool RST {};
-
-    // How many sequence numbers does this segment use?
-    size_t sequence_length() const { return SYN + payload.size() + FIN; }
-};
-```
-
-**中文:**
-```cpp
 /*
  * TCPSenderMessage 结构体包含五个字段 (minnow/util/tcp_sender_message.hh):
  *
@@ -342,6 +311,10 @@ struct TCPSenderMessage
 
 **English:**
 The TCPReceiver generates its own messages back to the peer's TCPSender:
+
+**中文:**
+`TCPReceiver` 生成自己的消息返回给对等方的 `TCPSender`：
+
 ```cpp
 /*
  * The TCPReceiverMessage structure contains three fields (minnow/util/tcp_receiver_message.hh):
@@ -357,17 +330,7 @@ The TCPReceiver generates its own messages back to the peer's TCPSender:
  * 3) The RST (reset) flag. If set, the stream has suffered an error and the connection
  *    should be aborted.
  */
-struct TCPReceiverMessage
-{
-    std::optional<Wrap32> ackno {};
-    uint16_t window_size {};
-    bool RST {};
-};
-```
 
-**中文:**
-`TCPReceiver` 生成自己的消息返回给对等方的 `TCPSender`：
-```cpp
 /*
  * TCPReceiverMessage 结构体包含三个字段 (minnow/util/tcp_receiver_message.hh):
  *
@@ -456,6 +419,7 @@ This is method will be called each time a new segment is received from the peer'
 
 **中文:**
 每次从对等方的发送方接收到一个新的段时，都会调用此方法。该方法需要：
+
 *   **如有必要，设置初始序列号**。第一个到达的、设置了 SYN 标志的段的序列号就是初始序列号。你需要跟踪这个值，以便在 32 位回绕的 seqnos/acknos 与其绝对等价物之间进行转换。（请注意，SYN 标志只是头部中的一个标志。同一个消息也可能携带数据或设置了 FIN 标志。）
 *   **将任何数据推送到 Reassembler**。如果 TCP 段的头部设置了 FIN 标志，这意味着载荷的最后一个字节是整个流的最后一个字节。请记住，`Reassembler` 期望的流索引从零开始；你将需要解开（unwrap）序列号以生成这些索引。
 

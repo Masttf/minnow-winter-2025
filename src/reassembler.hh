@@ -42,9 +42,8 @@ public:
   // Access output stream writer, but const-only (can't write from outside)
   const Writer& writer() const { return output_.writer(); }
 
-  uint64_t available_capacity() const {
-    return output_.writer().available_capacity();
-  }
+  uint64_t available_capacity() const { return output_.writer().available_capacity(); }
+
 private:
   ByteStream output_;
   bool has_last_ { false };

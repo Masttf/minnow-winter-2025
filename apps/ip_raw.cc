@@ -14,6 +14,6 @@ int main()
   RawSocket sock;
   string datagram;
   datagram += "Hello from CS144!!";
-  sock.sendto ( Address{" 1 "}, datagram );
+  sock.sendto( Address { " 1 " }, datagram );
   return 0;
 }
