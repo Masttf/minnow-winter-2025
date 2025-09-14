@@ -48,5 +48,6 @@ private:
   ByteStream output_;
   bool has_last_ { false };
   uint64_t first_unassembled_index_ { 0 };
+  uint64_t last_index_ { 0 }; // 最后一个字节的索引位置
   std::map<uint64_t, std::string> buffer {};
 };

@@ -10,9 +10,15 @@ using namespace std;
 void Reassembler::insert( uint64_t first_index, string data, bool is_last_substring )
 {
   if ( data.empty() ) {
-    // 特判空串
+    // 特判空串 - 记录最后位置但不直接关闭
     if ( is_last_substring ) {
-      output_.writer().close();
+      has_last_ = true;
+      last_index_ = first_index;
+      // 空串的最后位置就是起始位置
+      // 检查是否所有数据都已到达
+      if ( first_unassembled_index_ >= last_index_ ) {
+        output_.writer().close();
+      }
     }
     return;
   }
@@ -79,6 +85,7 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
   }
   if ( is_last_substring ) {
     has_last_ = true;
+    last_index_ = first_index + data.size(); // 记录最后一个字节之后的位置
   }
   // wirte
   while ( !buffer.empty() && buffer.begin()->first == first_unassembled_index_ ) {
@@ -87,7 +94,7 @@ void Reassembler::insert( uint64_t first_index, string data, bool is_last_substr
     buffer.erase( buffer.begin() );
   }
 
-  if ( has_last_ && buffer.empty() ) {
+  if ( has_last_ && first_unassembled_index_ >= last_index_ ) {
     output_.writer().close();
   }
 }
