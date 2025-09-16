@@ -46,13 +46,13 @@ private:
   bool fin_sent_ {false};
   uint64_t next_abs_seqno {0};
   // 未确认的ack
-  std::deque<TCPSenderMessage> outstanding_;
+  std::deque<TCPSenderMessage> outstanding_ {};
   
   uint64_t rec_ackno {0};
 
   // Timer
   uint64_t initial_RTO_ms_;
-  uint64_t cur_RTO_ms_;
+  uint64_t cur_RTO_ms_ {0};
   bool timer_running {false};
   uint64_t elapsed_ms_ {0};
   uint64_t count_ {0}; // 连续重传计数
