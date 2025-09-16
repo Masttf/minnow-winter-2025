@@ -48,7 +48,7 @@ private:
   // 未确认的ack
   std::deque<TCPSenderMessage> outstanding_;
   
-  uint64_t rev_ackno {0};
+  uint64_t rec_ackno {0};
 
   // Timer
   uint64_t initial_RTO_ms_;
