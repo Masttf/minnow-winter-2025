@@ -1,4 +1,4 @@
-#include "socket.hh"
+#include "tcp_minnow_socket.hh"
 
 #include <cstdlib>
 #include <iostream>
@@ -10,7 +10,7 @@ using namespace std;
 void get_URL( const string& host, const string& path )
 {
   Address addr = Address( host, "http" );
-  TCPSocket tcp;
+  CS144TCPSocket tcp;
   tcp.connect( addr );
 
   // 构建完整的 HTTP 请求
@@ -24,11 +24,14 @@ void get_URL( const string& host, const string& path )
 
   // 服务器响应后会把eof置为true，这样客户端就知道响应了
   // 读取响应直到 EOF
-  string buffer;
+  std::cout << "write" << endl;
   while ( !tcp.eof() ) {
+    // std::cout << 1 << endl;
+    string buffer;
     tcp.read( buffer );
     cout << buffer;
   }
+  tcp.wait_until_closed();
 }
 
 int main( int argc, char* argv[] )
