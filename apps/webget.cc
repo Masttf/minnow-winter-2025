@@ -24,9 +24,7 @@ void get_URL( const string& host, const string& path )
 
   // 服务器响应后会把eof置为true，这样客户端就知道响应了
   // 读取响应直到 EOF
-  std::cout << "write" << endl;
   while ( !tcp.eof() ) {
-    // std::cout << 1 << endl;
     string buffer;
     tcp.read( buffer );
     cout << buffer;

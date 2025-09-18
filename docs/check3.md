@@ -421,16 +421,16 @@ Remember your `webget.cc` that you wrote in Checkpoint 0? It used a TCP implemen
 **中文:**
 还记得你在检查点 0 中写的 `webget.cc` 吗？它使用了 Linux 内核提供的 TCP 实现（`TCPSocket`）。我们希望你把它切换到使用你自己的 TCP 实现，而不需要改变任何其他东西。我们认为你只需要做的是：
 *   将 `#include "socket.hh"` 替换为 `#include "tcp_minnow_socket.hh"`
+
 *   将 `TCPSocket` 类型替换为 `CS144TCPSocket`
+
 *   在你的 `get_URL()` 函数的末尾，添加一个对 `socket.wait_until_closed()` 的调用
     *我为什么要做这个？ 通常情况下，Linux 内核负责等待 TCP 连接达到“干净关闭”（并放弃它们的端口预留），即使用户进程已经退出。但是因为你的 TCP 实现完全在用户空间，除了你的程序之外，没有其他东西来跟踪连接状态。添加这个调用会让套接字等待，直到连接完全关闭。
     重新编译，并运行 `make check_webget` 来确认你已经完成了一个完整的循环：你已经在你自己完整的 TCP“协议栈”之上编写了一个基本的网页抓取器，并且它仍然成功地与一个真实的网页服务器通信。如果你遇到麻烦，尝试手动运行程序：`./build/apps/webget cs144.keithw.org /hasher/xyzzy`。你会在终端上得到一些可能有帮助的调试输出。
+    
 *   > [!TIP]
     >
-    > 在虚拟机，进行paser的时候，校验和失败导致三次握手失败
-*   > [!WARNING]
-    >
-    > 这个hash值好像已经改变了，可能需要修改脚本中的答案值![image-20250917230742662](./assets/image-20250917230742662.png)
+    > 经过端口转发后，校验和可能是错的，进行TCP seg paser的时候注释掉校验和
 
 ---
 
