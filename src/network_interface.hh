@@ -6,6 +6,7 @@
 
 #include <memory>
 #include <queue>
+#include <unordered_map>
 
 // A "network interface" that connects IP (the internet layer, or network layer)
 // with Ethernet (the network access layer, or link layer).
@@ -82,4 +83,15 @@ private:
 
   // Datagrams that have been received
   std::queue<InternetDatagram> datagrams_received_ {};
+  
+  // ip 映射MAC和时间
+  std::unordered_map<uint32_t, std::pair<EthernetAddress, uint64_t>> arp_table_ {};
+  
+  std::unordered_map<uint32_t, std::pair<std::vector<InternetDatagram>, uint64_t>> waited_dgram_ {};
+  
+  // 30s
+  constexpr static uint64_t ip_overtime_ = 30 * 1000;
+  constexpr static uint64_t wait_overtime_ = 5000;
+
+  EthernetFrame make_eth_frame_for_ip(EthernetAddress dst, const InternetDatagram& dgram);
 };
