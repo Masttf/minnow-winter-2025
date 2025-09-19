@@ -41,6 +41,7 @@ In past labs, you wrote a TCP implementation that can exchange TCP segments with
 
 **中文:**
 在过去的实验中，你编写了一个 TCP 实现，可以与任何其他讲 TCP 的计算机交换 TCP 段。这些段实际上是如何传送到对等方的 TCP 实现的呢？正如我们所讨论的，有几种选择：
+
 *   **TCP-in-UDP-in-IP**。TCP 段可以被承载在用户数据报的有效载荷中。在正常（用户空间）环境下，这是最容易实现的：Linux 提供一个接口（一个“数据报套接字”，`UDPSocket`），让应用程序*只提供*用户数据报的有效载荷和目标地址，而内核则负责构建 UDP 头部、IP 头部和以太网头部，然后将数据包发送到适当的下一跳。内核确保每个套接字都有一个独占的本地和远程地址及端口号组合，并且由于是内核将这些写入 UDP 和 IP 头部，它可以保证不同应用程序之间的隔离。
 *   **TCP-in-IP**。在通常用法中，TCP 段几乎总是直接放在互联网数据报内部，IP 和 TCP 头部之间没有 UDP 头部。这就是人们所说的“TCP/IP”。这实现起来稍微困难一些。Linux 提供一个名为 TUN 设备的接口，让应用程序提供一个*完整*的互联网数据报，内核则负责其余部分（写入以太网头部，并通过物理以太网卡实际发送等）。但现在应用程序必须自己构建完整的 IP 头部，而不仅仅是有效载荷。
 *   **TCP-in-IP-in-Ethernet**。在上述方法中，我们仍然依赖 Linux 内核来完成部分网络协议栈的工作。每次你的代码向 TUN 设备写入一个 IP 数据报时，Linux 都必须构建一个合适的链路层（以太网）帧，并将该 IP 数据报作为其有效载荷。这意味着 Linux 必须根据下一跳的 IP 地址找出下一跳的以太网目标地址。如果它还不知道这个映射，Linux 会广播一个查询，询问“谁声明拥有以下 IP 地址？你的以太网地址是什么？”并等待响应。
@@ -49,12 +50,11 @@ In past labs, you wrote a TCP implementation that can exchange TCP segments with
 
 **(Image and Figure 1 Caption)**
 **English:**
-(The image shows a diagram of the TCP/IP stack and a router.)
+![image-20250919161829166](./assets/image-20250919161829166.png)
 Figure 1: The network interface bridges the worlds of Internet datagrams and of link-layer frames. This component is useful as part of a host's TCP/IP stack (left side), and also as part of an IP router (right side).
 
 **(图片及图 1 标题)**
 **中文:**
-（图片展示了 TCP/IP 协议栈和路由器的示意图。）
 图 1：网络接口连接了互联网数据报和链路层帧的世界。该组件既可作为主机 TCP/IP 协议栈的一部分（左侧），也可作为 IP 路由器的一部分（右侧）。
 
 ---
