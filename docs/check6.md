@@ -82,12 +82,11 @@ Your implementation of the router will use the Minnow library with a new `Router
 
 **(Image and Figure 1 Caption)**
 **English:**
-(The image shows a diagram of a router with multiple network interfaces.)
+![image-20250920105752014](./assets/image-20250920105752014.png)
 Figure 1: A router contains several network interfaces and can receive IP datagrams on any one of them. The router forwards any datagram it receives to the next hop, on the appropriate outbound interface. The routing table tells the router how to make this decision.
 
 **(图片及图 1 标题)**
 **中文:**
-（图片展示了一个拥有多个网络接口的路由器示意图。）
 图 1：一个路由器包含多个网络接口，并可以在其中任何一个接口上接收 IP 数据报。路由器将其接收到的任何数据报转发到下一跳，通过适当的出站接口。路由表告诉路由器如何做出这个决定。
 
 ---
@@ -194,12 +193,11 @@ You can test your implementation by running `cmake --build build --target check5
 
 **(Image and Figure 2 Caption)**
 **English:**
-(The image shows a diagram of a simulated test network with a central router and multiple network interfaces.)
+![image-20250920105857965](./assets/image-20250920105857965.png)
 Figure 2: The simulated test network used in the router test, also run by `cmake --build build --target check5`. (Fun fact: the UUN network is David Mazières’s slice of the Internet, allocated in 1993. The `whois` tool, or the linked website, can be used to look up who controls each IP address allocation.)
 
 **(图片及图 2 标题)**
 **中文:**
-（图片展示了一个模拟测试网络的示意图，其中有一个中央路由器和多个网络接口。）
 图 2：路由器测试中使用的模拟测试网络，也通过 `cmake --build build --target check5` 运行。（趣闻：UUN 网络是 David Mazières 在 1993 年分配到的互联网片段。可以使用 `whois` 工具或链接的网站来查询每个 IP 地址分配的控制者。）
 
 ---

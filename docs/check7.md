@@ -94,11 +94,7 @@ In this lab, you'll create a real network that combines your network stack with 
 
 ---
 
-**(Image description)**
-A diagram showing a network setup between Lab Partner #1 (Client) and Lab Partner #2 (Server). Each partner has a Host and a Router. The client host connects to the client router, which connects to a central point `cs144.keithw.org`. The server host connects to the server router, which also connects to the central point. The diagram shows which lab checkpoints correspond to different parts of the network stack for each component.
-
-**(图片描述)**
-一张图表展示了实验伙伴 #1（客户端）和实验伙伴 #2（服务器）之间的网络设置。每个伙伴都有一台主机和一台路由器。客户端主机连接到客户端路由器，后者连接到一个中心点 `cs144.keithw.org`。服务器主机连接到服务器路由器，后者也连接到该中心点。图表显示了每个组件的网络协议栈的不同部分对应于哪个实验检查点。
+![image-20250920105947385](./assets/image-20250920105947385.png)
 
 ---
 
