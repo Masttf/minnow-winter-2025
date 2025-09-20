@@ -92,11 +92,21 @@ void NetworkInterface::recv_frame( EthernetFrame frame )
       return ;
     }
     auto it = arp_table_.find(msg.sender_ip_address);
+    bool learned_new_mapping = false;
     if (it == arp_table_.end()) {
       arp_table_[msg.sender_ip_address] = {msg.sender_ethernet_address, 0};
+      learned_new_mapping = true;
     } else {
       // 有效时间重置
       it->second.second = 0;
+    }
+
+    // 如果学到了新的映射，立即发送等待中的数据报
+    if (learned_new_mapping && waited_dgram_.count(msg.sender_ip_address)) {
+      for (auto &x : waited_dgram_[msg.sender_ip_address].first) {
+        transmit(make_eth_frame_for_ip(msg.sender_ethernet_address, x));
+      }
+      waited_dgram_.erase(msg.sender_ip_address);
     }
 
     if (msg.opcode == ARPMessage::OPCODE_REQUEST) {
@@ -119,10 +129,13 @@ void NetworkInterface::recv_frame( EthernetFrame frame )
         transmit(reply_frame);
       }
     } else {
-      for (auto &x : waited_dgram_[msg.sender_ip_address].first) {
-        send_datagram(x, Address::from_ipv4_numeric(msg.sender_ip_address));
+      // 这是ARP回复，发送等待中的数据报
+      if (waited_dgram_.count(msg.sender_ip_address)) {
+        for (auto &x : waited_dgram_[msg.sender_ip_address].first) {
+          transmit(make_eth_frame_for_ip(msg.sender_ethernet_address, x));
+        }
+        waited_dgram_.erase(msg.sender_ip_address);
       }
-      waited_dgram_.erase(msg.sender_ip_address);
     }
   } else { //IP 请求
     Parser parser (frame.payload);
